@@ -30,6 +30,7 @@ namespace PePe.API {
 
             services.AddScoped<IMonthConvertor, MonthConvertor>();
             services.AddScoped<ILoadedHtmlDocumentProvider, WebLoadedHtmlDocumentProvider>();
+            services.AddScoped<IBasicInfoProvider, StaticBasicInfoProvider>();
             services.AddScoped<ILogger, VoidLogger>();
             services.AddScoped<IWebScraper, WebScraper>();
 
@@ -49,9 +50,9 @@ namespace PePe.API {
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
-            if (env.IsDevelopment()) {
+            /*if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
-            }
+            }*/
 
             app.UseSwagger();
             app.UseSwaggerUI(c => {
@@ -59,7 +60,7 @@ namespace PePe.API {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "PePe API");
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
