@@ -1,4 +1,4 @@
-using PePe.Service;
+ï»¿using PePe.Service;
 using System;
 using Xunit;
 using NSubstitute;
@@ -59,29 +59,29 @@ namespace PePe.UnitTests {
             yield return new object[] {
                 "res/pepe_20_01_2021.html",
                 new List<Meal> {
-                    new Meal{MealType = MealType.Soup, Name = "Tyrolská èesneèka", Info = "", Price = 30},
-                    new Meal{MealType = MealType.Main, Name = "Domácí špekové knedlíky, zelí, cibulka", Info = "", Price = 98},
-                    new Meal{MealType = MealType.Main, Name = "Pikantní vepøová játra pana starosty, rıe", Info = "", Price = 98},
-                    new Meal{MealType = MealType.Main, Name = "Zbojnickı vepøovı závitek, rıe,", Info = "( okurka, slanina, klobása )", Price = 109},
-                    new Meal{MealType = MealType.Main, Name = "Kuøecí prsíèka v sezamovém semínku, bramborová kaše, zelnı salát", Info = "", Price = 105},
-                    new Meal{MealType = MealType.Main, Name = "Kuøecí prsíèka v sezamovém semínku, bramborovı salát", Info = "", Price = 105},
-                    new Meal{MealType = MealType.Main, Name = "Kuøecí køidélka na medu, rozmarınové brambùrky, majonézovı dip", Info = "", Price = 109},
-                    new Meal{MealType = MealType.Main, Name = "Smaenı vepøovı øízek, bramborová kaše, zelnı salát", Info = "", Price = 105},
-                    new Meal{MealType = MealType.Main, Name = "Smaená TRESKA, brambor, zelnı salát, domácí tatarka", Info = "", Price = 98}
+                    new Meal{MealType = MealType.Soup, Name = "TyrolskÃ¡ ÄesneÄka", Info = "", Price = 30},
+                    new Meal{MealType = MealType.Main, Name = "DomÃ¡cÃ­ Å¡pekovÃ© knedlÃ­ky, zelÃ­, cibulka", Info = "", Price = 98},
+                    new Meal{MealType = MealType.Main, Name = "PikantnÃ­ vepÅ™ovÃ¡ jÃ¡tra pana starosty, rÃ½Å¾e", Info = "", Price = 98},
+                    new Meal{MealType = MealType.Main, Name = "ZbojnickÃ½ vepÅ™ovÃ½ zÃ¡vitek, rÃ½Å¾e,", Info = "( okurka, slanina, klobÃ¡sa )", Price = 109},
+                    new Meal{MealType = MealType.Main, Name = "KuÅ™ecÃ­ prsÃ­Äka v sezamovÃ©m semÃ­nku, bramborovÃ¡ kaÅ¡e, zelnÃ½ salÃ¡t", Info = "", Price = 105},
+                    new Meal{MealType = MealType.Main, Name = "KuÅ™ecÃ­ prsÃ­Äka v sezamovÃ©m semÃ­nku, bramborovÃ½ salÃ¡t", Info = "", Price = 105},
+                    new Meal{MealType = MealType.Main, Name = "KuÅ™ecÃ­ kÅ™idÃ©lka na medu, rozmarÃ½novÃ© brambÅ¯rky, majonÃ©zovÃ½ dip", Info = "", Price = 109},
+                    new Meal{MealType = MealType.Main, Name = "SmaÅ¾enÃ½ vepÅ™ovÃ½ Å™Ã­zek, bramborovÃ¡ kaÅ¡e, zelnÃ½ salÃ¡t", Info = "", Price = 105},
+                    new Meal{MealType = MealType.Main, Name = "SmaÅ¾enÃ¡ TRESKA, brambor, zelnÃ½ salÃ¡t, domÃ¡cÃ­ tatarka", Info = "", Price = 98}
                 }
             };
             yield return new object[] {
                 "res/pepe_21_01_2021.html",
                 new List<Meal> {
-                    new Meal{MealType = MealType.Soup, Name = "Fazolová s klobásou", Info = "", Price = 30},
-                    new Meal{MealType = MealType.Main, Name = "Halušky s brynzou polévané slaninou", Info = "", Price = 98},
-                    new Meal{MealType = MealType.Main, Name = "Vepøovı gulášek s feferonkou, houskové knedlíky", Info = "", Price = 98},
-                    new Meal{MealType = MealType.Main, Name = "Èevapèièi, brambor, domácí tatarka", Info = "", Price = 98},
-                    new Meal{MealType = MealType.Main, Name = "Vepøové øízeèky, rokforová omáèka, hranolky", Info = "", Price = 109},
-                    new Meal{MealType = MealType.Main, Name = "Špikovaná vepøová peèínka se švestkami, šouchané brambory", Info = "", Price = 105},
-                    new Meal{MealType = MealType.Main, Name = "Špecle s høíbky, zeleninou a kuøecím masem", Info = "( smetanová omáèka )", Price = 105},
-                    new Meal{MealType = MealType.Main, Name = "Smaenı kuøecí øízek, bramborová kaše, zelnı salát", Info = "", Price = 105},
-                    new Meal{MealType = MealType.Main, Name = "Smaenı sır, brambor, zelnı salát, domácí tatarka", Info = "", Price = 105}
+                    new Meal{MealType = MealType.Soup, Name = "FazolovÃ¡ s klobÃ¡sou", Info = "", Price = 30},
+                    new Meal{MealType = MealType.Main, Name = "HaluÅ¡ky s brynzou polÃ©vanÃ© slaninou", Info = "", Price = 98},
+                    new Meal{MealType = MealType.Main, Name = "VepÅ™ovÃ½ gulÃ¡Å¡ek s feferonkou, houskovÃ© knedlÃ­ky", Info = "", Price = 98},
+                    new Meal{MealType = MealType.Main, Name = "ÄŒevapÄiÄi, brambor, domÃ¡cÃ­ tatarka", Info = "", Price = 98},
+                    new Meal{MealType = MealType.Main, Name = "VepÅ™ovÃ© Å™Ã­zeÄky, rokforovÃ¡ omÃ¡Äka, hranolky", Info = "", Price = 109},
+                    new Meal{MealType = MealType.Main, Name = "Å pikovanÃ¡ vepÅ™ovÃ¡ peÄÃ­nka se Å¡vestkami, Å¡Å¥ouchanÃ© brambory", Info = "", Price = 105},
+                    new Meal{MealType = MealType.Main, Name = "Å pecle s hÅ™Ã­bky, zeleninou a kuÅ™ecÃ­m masem", Info = "( smetanovÃ¡ omÃ¡Äka )", Price = 105},
+                    new Meal{MealType = MealType.Main, Name = "SmaÅ¾enÃ½ kuÅ™ecÃ­ Å™Ã­zek, bramborovÃ¡ kaÅ¡e, zelnÃ½ salÃ¡t", Info = "", Price = 105},
+                    new Meal{MealType = MealType.Main, Name = "SmaÅ¾enÃ½ sÃ½r, brambor, zelnÃ½ salÃ¡t, domÃ¡cÃ­ tatarka", Info = "", Price = 105}
                 }
             };
         }
