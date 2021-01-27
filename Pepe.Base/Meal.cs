@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Pepe.Base {
+namespace PePe.Base {
     public class Meal {
         public MealType MealType { get; set; }
         public string Name { get; set; }

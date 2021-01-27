@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Pepe.Base\Pepe.Base.csproj" />
-    <ProjectReference Include="..\Pepe.Service\Pepe.Service.csproj" />
+    <ProjectReference Include="..\Pepe.Base\PePe.Base.csproj" />
+    <ProjectReference Include="..\Pepe.Service\PePe.Service.csproj" />
   </ItemGroup>
 
 

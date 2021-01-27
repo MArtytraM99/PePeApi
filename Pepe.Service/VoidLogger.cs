@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Pepe.Service {
+namespace PePe.Service {
     public class VoidLogger : ILogger {
         public IDisposable BeginScope<TState>(TState state) {
             throw new NotImplementedException();

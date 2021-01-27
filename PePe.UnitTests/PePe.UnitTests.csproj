@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Pepe.Service\Pepe.Service.csproj" />
+    <ProjectReference Include="..\Pepe.Service\PePe.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>

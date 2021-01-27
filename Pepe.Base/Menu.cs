@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Pepe.Base {
+namespace PePe.Base {
     public class Menu {
         public DateTime Date { get; set; }
         public IEnumerable<Meal> Meals { get; set; }

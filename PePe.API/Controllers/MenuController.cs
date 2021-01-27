@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Pepe.Base;
-using Pepe.Service;
+using PePe.Base;
+using PePe.Service;
 
 namespace PePe.API.Controllers {
     [Route("menu")]

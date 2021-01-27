@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Pepe.Service {
+namespace PePe.Service {
     public class WebLoadedHtmlDocumentProvider : ILoadedHtmlDocumentProvider {
         const string url = "https://www.jidelnapepe.cz/";
         public HtmlDocument GetLoadedHtmlDocument() {

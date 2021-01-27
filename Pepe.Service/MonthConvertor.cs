@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Pepe.Service {
+namespace PePe.Service {
     public class MonthConvertor : IMonthConvertor {
         private Dictionary<string, int> monthMap;
 

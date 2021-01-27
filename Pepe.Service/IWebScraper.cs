@@ -1,9 +1,9 @@
-﻿using Pepe.Base;
+﻿using PePe.Base;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Pepe.Service {
+namespace PePe.Service {
     public interface IWebScraper {
         Menu ScrapeForMenu();
     }

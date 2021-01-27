@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PePe.API", "PePe.API\PePe.API.csproj", "{412BDEBA-7941-46C2-97BE-FFD65154633F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PePe.API", "PePe.API\PePe.API.csproj", "{412BDEBA-7941-46C2-97BE-FFD65154633F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pepe.Base", "Pepe.Base\Pepe.Base.csproj", "{331BEA24-3472-456F-BA9D-8D2BBD1724ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PePe.Base", "Pepe.Base\PePe.Base.csproj", "{331BEA24-3472-456F-BA9D-8D2BBD1724ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pepe.Service", "Pepe.Service\Pepe.Service.csproj", "{AE080CD4-E20C-40CA-8E9E-F439C6B5EB1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PePe.Service", "Pepe.Service\PePe.Service.csproj", "{AE080CD4-E20C-40CA-8E9E-F439C6B5EB1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PePe.UnitTests", "PePe.UnitTests\PePe.UnitTests.csproj", "{24F59E78-7897-41E6-98E5-407D96448854}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PePe.UnitTests", "PePe.UnitTests\PePe.UnitTests.csproj", "{24F59E78-7897-41E6-98E5-407D96448854}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

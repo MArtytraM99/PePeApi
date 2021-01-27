@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Pepe.Base {
+namespace PePe.Base {
     public enum MealType {
         Soup,
         Main

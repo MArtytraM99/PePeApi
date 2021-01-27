@@ -5,11 +5,11 @@ using System.Net;
 using System.IO;
 using HtmlAgilityPack;
 using System.Linq;
-using Pepe.Base;
+using PePe.Base;
 using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
 
-namespace Pepe.Service {
+namespace PePe.Service {
     public class WebScraper : IWebScraper {
         static readonly Regex spacesTrimmer = new Regex(@"\s\s+", RegexOptions.Compiled);
 

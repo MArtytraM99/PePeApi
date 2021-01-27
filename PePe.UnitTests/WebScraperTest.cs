@@ -1,9 +1,9 @@
-using Pepe.Service;
+using PePe.Service;
 using System;
 using Xunit;
 using NSubstitute;
 using Microsoft.Extensions.Logging;
-using Pepe.Base;
+using PePe.Base;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 

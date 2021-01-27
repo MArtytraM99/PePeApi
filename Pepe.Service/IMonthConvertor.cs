@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Pepe.Service {
+namespace PePe.Service {
     public interface IMonthConvertor {
         int convertMonth(string monthName);
     }
