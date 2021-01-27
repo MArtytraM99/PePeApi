@@ -14,6 +14,10 @@ namespace PePe.API.Controllers {
             this.basicInfoProvider = basicInfoProvider;
         }
 
+        /// <summary>
+        /// Returns basic information about the canteen such as address and opening hours.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("basic_info")]
         [ProducesResponseType(typeof(BasicInfo), 200)]
         public IActionResult GetBasicInfo() {

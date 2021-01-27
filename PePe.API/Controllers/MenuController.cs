@@ -14,15 +14,13 @@ namespace PePe.API.Controllers {
         public MenuController(IWebScraper webScraper) {
             this.webScraper = webScraper;
         }
+        /// <summary>
+        /// Fetches today's menu from web. If the menu has not been published yet meals will be empty.
+        /// </summary>
+        /// <returns>Today's menu</returns>
         [HttpGet("")]
         [ProducesResponseType(typeof(Menu), 200)]
         public IActionResult GetMenu() {
-            /*var testMenu = new Menu { Date = DateTime.Now.Date, Meals=new List<Meal> {
-                new Meal{MealType = MealType.Soup, Name = "Fazolová s klobásou", Info = "", Price = 30},
-                new Meal{MealType = MealType.Main, Name = "Halušky s brynzou polévané slaninou", Info = "", Price = 98},
-                new Meal{MealType = MealType.Main, Name = "Vepřový gulášek s feferonkou, houskové knedlíky", Info = "", Price = 98},
-            } };*/
-
             return Json(webScraper.ScrapeForMenu());
         }
     }
