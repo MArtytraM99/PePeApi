@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace PePe.Service {
-    public class VoidLogger : ILogger {
+    public class VoidLogger<T> : ILogger<T> {
         public IDisposable BeginScope<TState>(TState state) {
             throw new NotImplementedException();
         }

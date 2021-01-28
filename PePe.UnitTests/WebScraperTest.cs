@@ -26,8 +26,8 @@ namespace PePe.UnitTests {
             return new MonthConvertor();
         }
 
-        ILogger GetVoidLogger() {
-            return Substitute.For<ILogger>();
+        ILogger<WebScraper> GetVoidLogger() {
+            return new VoidLogger<WebScraper>();
         }
 
         [Fact]
