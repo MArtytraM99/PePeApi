@@ -58,9 +58,11 @@ namespace PePe.Service {
                 if (tbody == null) // sometimes the tbody is ommited
                     tbody = node;
                 for(int i = 0; i < tbody.ChildNodes.Count; i++) {
+                    if (tbody.ChildNodes[i].Name != "tr")
+                        continue;
                     var tr = tbody.ChildNodes[i];
                     if (!tr.HasClass("j_radek1")) {
-                        logger.LogWarning($"First row in food table didn't have class 'j_radek1'. InnerText ({tbody.InnerText})");
+                        logger.LogWarning($"First row in food table didn't have class 'j_radek1'. InnerText ({tbody.InnerText}), classes ({string.Join(", ", tr.GetClasses())})");
                         continue;
                     }
 
