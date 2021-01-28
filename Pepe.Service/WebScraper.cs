@@ -15,12 +15,12 @@ namespace PePe.Service {
 
         private readonly ILoadedHtmlDocumentProvider htmlDocumentProvider;
         private readonly IMonthConvertor monthConvertor;
-        private readonly ILogger logger;
+        private readonly ILogger<WebScraper> logger;
 
         public WebScraper(
             ILoadedHtmlDocumentProvider htmlDocumentProvider,
             IMonthConvertor monthConvertor,
-            ILogger logger
+            ILogger<WebScraper> logger
             ){
             this.htmlDocumentProvider = htmlDocumentProvider;
             this.monthConvertor = monthConvertor;

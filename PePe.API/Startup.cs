@@ -13,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using PePe.Service;
 
@@ -30,12 +32,13 @@ namespace PePe.API {
                 opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
+            services.AddLogging();
+
             services.AddScoped<IMonthConvertor, MonthConvertor>();
             services.AddScoped<ILoadedHtmlDocumentProvider, WebLoadedHtmlDocumentProvider>();
             services.AddScoped<IBasicInfoProvider, StaticBasicInfoProvider>();
-            services.AddScoped<ILogger, VoidLogger>();
+            
             services.AddScoped<IWebScraper, WebScraper>();
-
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo {
