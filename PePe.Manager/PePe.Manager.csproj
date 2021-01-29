@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MongoDB.Bson" Version="2.11.6" />
+    <ProjectReference Include="..\Pepe.Base\PePe.Base.csproj" />
+    <ProjectReference Include="..\PePe.DAO\PePe.DAO.csproj" />
   </ItemGroup>
 
 </Project>
