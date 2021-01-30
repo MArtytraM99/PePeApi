@@ -30,7 +30,7 @@ namespace PePe.UnitTests {
         [Fact]
         public void GetTodaysMenu_CallsDateProvider() {
             var todaysDate = new DateTime(1970, 12, 24).Date;
-            var webScraper = GetStaticWebScraper(null);
+            var webScraper = GetStaticWebScraper(new Menu { Date = todaysDate });
             var dateProvider = GetStaticDateProvider(todaysDate);
             var dao = Substitute.For<IMenuDao>();
             dao.GetMenuByDate(Arg.Any<DateTime>()).Returns(ci => null);
