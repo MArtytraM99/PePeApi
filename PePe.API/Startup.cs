@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,6 +17,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using PePe.API.Model;
+using PePe.DAO;
+using PePe.Manager;
 using PePe.Service;
 
 namespace PePe.API {
@@ -37,8 +41,20 @@ namespace PePe.API {
             services.AddScoped<IMonthConvertor, MonthConvertor>();
             services.AddScoped<ILoadedHtmlDocumentProvider, WebLoadedHtmlDocumentProvider>();
             services.AddScoped<IBasicInfoProvider, StaticBasicInfoProvider>();
+            services.AddAutoMapper(typeof(APIProfile));
             
             services.AddScoped<IWebScraper, WebScraper>();
+            services.AddScoped<IDateProvider, PragueDateProvider>();
+            
+            string connectionString = Configuration.GetConnectionString("mongoDB");
+            string databaseName = Configuration.GetConnectionString("pepeDbName");
+            string collectionName = Configuration.GetConnectionString("pepeMenuCollectionName");
+            new ClassMap().RegisterMaps();
+            services.AddSingleton<IMenuDao, MongoMenuDao>(serviceProvider => {
+                return new MongoMenuDao(connectionString, databaseName, collectionName);
+            });
+
+            services.AddScoped<IMenuManager, MenuManager>();
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo {

@@ -29,12 +29,25 @@ namespace PePe.DAO {
         }
 
         public IEnumerable<Menu> GetAll() {
-            return collection.Find(Builders<Menu>.Filter.Empty).ToList();
+            return collection.Find(Builders<Menu>.Filter.Empty).ToEnumerable();
         }
 
         public Menu Save(Menu menu) {
             collection.InsertOne(menu);
             return menu;
+        }
+
+        public IEnumerable<Menu> Find(MenuSearch menuSearch) {
+            var fromDateFilter = Filter.Empty;
+            if(menuSearch.FromDate.HasValue)
+                fromDateFilter = Filter.Gte(m => m.Date, menuSearch.FromDate?.Date);
+
+            var toDateFilter = Filter.Empty;
+            if(menuSearch.ToDate.HasValue)
+                toDateFilter = Filter.Lte(m => m.Date, menuSearch.ToDate?.Date);
+
+            var filter = Filter.And(fromDateFilter, toDateFilter);
+            return collection.Find(filter).ToEnumerable();
         }
     }
 }

@@ -7,5 +7,7 @@ namespace PePe.DAO {
     public interface IMenuDao {
         Menu GetMenuByDate(DateTime dateTime);
         Menu Save(Menu menu);
+
+        IEnumerable<Menu> Find(MenuSearch menuSearch);
     }
 }
