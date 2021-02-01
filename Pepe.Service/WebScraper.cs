@@ -96,23 +96,101 @@ namespace PePe.Service {
         /// <param name="headingDate"></param>
         /// <returns></returns>
         public DateTime ParseHeadingDate(string headingDate) {
-            var splited = headingDate.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-            if(splited.Length < 3) {
-                logger.LogError($"Heading date '{headingDate}' is in unrecognised format.");
-                throw new ArgumentException($"Heading date '{headingDate}' is in unrecognised format.");
+            var tokens = LoadTokensFromString(headingDate);
+            var dayName = ""; // not used at this time
+            if (tokens[0].IsWord()) {
+                dayName = tokens[0].representation;
             }
-            var dayName = splited[0];
-            var day = int.Parse(splited[1].Split(".")[0]);
-            var monthName = splited[1].Split(".")[1];
-            bool skipped = false;
-            if (string.IsNullOrWhiteSpace(monthName)) {
-                monthName = splited[2];
-                skipped = true;
+
+            int index = 0;
+            while (index < tokens.Count && tokens[index].IsWord())
+                index++;
+
+            if(index == tokens.Count) {
+                var msg = $"Heading date '{headingDate}' doesn't contain number of day.";
+                logger.LogError(msg);
+                throw new ArgumentException(msg);
             }
-            var month = monthConvertor.convertMonth(monthName);
-            var year = int.Parse(skipped ? splited[3] : splited[2]);
+
+            var day = tokens[index].GetNumber();
+            index++;
+            if(index == tokens.Count) {
+                var msg = $"Heading date '{headingDate}' doesn't contain month.";
+                logger.LogError(msg);
+                throw new ArgumentException(msg);
+            }
+
+            int month;
+            if (tokens[index].IsNumber())
+                month = tokens[index].GetNumber();
+            else
+                month = monthConvertor.convertMonth(tokens[index].representation);
+            index++;
+
+            while (index < tokens.Count && tokens[index].IsWord())
+                index++;
+            if (index == tokens.Count) {
+                var msg = $"Heading date '{headingDate}' doesn't contain year.";
+                logger.LogError(msg);
+                throw new ArgumentException(msg);
+            }
+            int year = tokens[index].GetNumber();
 
             return new DateTime(year, month, day);
+        }
+
+        class Token {
+            public Token(string representation) {
+                this.representation = representation;
+            }
+            public bool IsNumber() => int.TryParse(representation, out int _);
+            public int GetNumber() => int.Parse(representation);
+            public bool IsWord() => !IsNumber();
+            public bool IsNullOrEmpty() => string.IsNullOrEmpty(representation);
+
+            public string representation;
+        }
+
+        enum PrevChar {
+            NONE, DIGIT, LETTER
+        }
+
+        private List<Token> LoadTokensFromString(string s) {
+            List<Token> tokens = new List<Token>();
+            if (string.IsNullOrEmpty(s))
+                return tokens;
+            
+            var sb = new StringBuilder();
+            sb.Clear();
+            var prevChar = PrevChar.NONE;
+            int index = 0;
+            while(index < s.Length) {
+                if (char.IsDigit(s[index])) {
+                    if (prevChar == PrevChar.LETTER) {
+                        tokens.Add(new Token(sb.ToString()));
+                        sb.Clear();
+                    }
+                    sb.Append(s[index]);
+                    prevChar = PrevChar.DIGIT;
+                } else if(char.IsLetter(s[index])) {
+                    if(prevChar == PrevChar.DIGIT) {
+                        tokens.Add(new Token(sb.ToString()));
+                        sb.Clear();
+                    }
+                    sb.Append(s[index]);
+                    prevChar = PrevChar.LETTER;
+                } else if (sb.Length != 0) {
+                    tokens.Add(new Token(sb.ToString()));
+                    sb.Clear();
+                    prevChar = PrevChar.NONE;
+                }
+
+                index++;
+            }
+            if (sb.Length != 0)
+                tokens.Add(new Token(sb.ToString()));
+
+            return tokens.Where(t => !t.IsNullOrEmpty()).ToList();
         }
     }
 }
