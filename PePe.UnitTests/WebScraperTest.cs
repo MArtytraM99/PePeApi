@@ -123,6 +123,30 @@ namespace PePe.UnitTests {
             Assert.Equal(expectedMeals, menu.Meals, new MealComparer());
         }
 
-        // TODO: test parseHeadingDate
+        public static IEnumerable<object[]> GetDateParsingData() {
+            yield return new object[] { "Pondělí 2.ledna 2021", new DateTime(2021,1,2) };
+            yield return new object[] { "Pondělí 2.LEDNA 2021", new DateTime(2021, 1, 2) };
+            yield return new object[] { "Pondělí 2. ledna 2021", new DateTime(2021, 1, 2) };
+            yield return new object[] { "   Pondělí   2.  LedNa    2021  ", new DateTime(2021, 1, 2) };
+            yield return new object[] { "Pondělí2LedNa2021", new DateTime(2021, 1, 2) };
+            yield return new object[] { "   Pondělí2LedNa2021   ", new DateTime(2021, 1, 2) };
+            yield return new object[] { "Pondělí_2-LedNa_2021", new DateTime(2021, 1, 2) };
+            yield return new object[] { "Pondělí - 2 - LedNa - 2021", new DateTime(2021, 1, 2) };
+            yield return new object[] { "2.1.2021", new DateTime(2021, 1, 2) };
+            yield return new object[] { "2-1-2021", new DateTime(2021, 1, 2) };
+            yield return new object[] { "Pondělí 2.1.2021", new DateTime(2021, 1, 2) };
+        }
+
+        [Theory]
+        [MemberData(nameof(GetDateParsingData))]
+        public void ParseHeadingDate_ParsesDateCorrectly(string dateString, DateTime expectedDate) {
+            var htmlDocumentProvider = Substitute.For<ILoadedHtmlDocumentProvider>();
+            var monthConvertor = GetMonthConvertor();
+            var scraper = new WebScraper(htmlDocumentProvider, monthConvertor, GetVoidLogger());
+
+            var parsedDate = scraper.ParseHeadingDate(dateString);
+
+            Assert.Equal(expectedDate, parsedDate);
+        }
     }
 }
