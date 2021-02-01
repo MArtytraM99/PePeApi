@@ -40,6 +40,9 @@ namespace PePe.API.Controllers {
         [HttpPost("find")]
         [ProducesResponseType(typeof(IEnumerable<PePeMenu>), 200)]
         public IActionResult Find([FromBody] MenuSearch menuSearch) {
+            if (menuSearch == null)
+                return BadRequest("Ill-formed search object.");
+
             var foundMenus = mapper.Map<IEnumerable<Menu>, IEnumerable<PePeMenu>>(menuManager.Find(menuSearch));
             return Json(foundMenus);
         }

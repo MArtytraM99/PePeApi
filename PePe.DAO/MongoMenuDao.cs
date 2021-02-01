@@ -5,6 +5,7 @@ using MongoDB.Driver;
 using PePe.Base;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace PePe.DAO {
@@ -47,7 +48,17 @@ namespace PePe.DAO {
                 toDateFilter = Filter.Lte(m => m.Date, menuSearch.ToDate?.Date);
 
             var filter = Filter.And(fromDateFilter, toDateFilter);
-            return collection.Find(filter).ToEnumerable();
+            var foundMenus = collection.Find(filter);
+
+            if (!menuSearch.MealTypeFilter.HasValue) {
+                return foundMenus.ToEnumerable();
+            }
+
+            return foundMenus.Project(m => new Menu {
+                Id = m.Id,
+                Date = m.Date,
+                Meals = m.Meals.Where(meal => meal.MealType == menuSearch.MealTypeFilter.Value)
+            }).ToEnumerable();
         }
     }
 }
