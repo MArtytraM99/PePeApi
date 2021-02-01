@@ -103,8 +103,14 @@ namespace PePe.Service {
             }
             var dayName = splited[0];
             var day = int.Parse(splited[1].Split(".")[0]);
-            var month = monthConvertor.convertMonth(splited[1].Split(".")[1]);
-            var year = int.Parse(splited[2]);
+            var monthName = splited[1].Split(".")[1];
+            bool skipped = false;
+            if (string.IsNullOrWhiteSpace(monthName)) {
+                monthName = splited[2];
+                skipped = true;
+            }
+            var month = monthConvertor.convertMonth(monthName);
+            var year = int.Parse(skipped ? splited[3] : splited[2]);
 
             return new DateTime(year, month, day);
         }
