@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PePe.API", "PePe.API\PePe.API.csproj", "{412BDEBA-7941-46C2-97BE-FFD65154633F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PePe.Base", "Pepe.Base\PePe.Base.csproj", "{331BEA24-3472-456F-BA9D-8D2BBD1724ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PePe.Base", "PePe.Base\PePe.Base.csproj", "{331BEA24-3472-456F-BA9D-8D2BBD1724ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PePe.Service", "Pepe.Service\PePe.Service.csproj", "{AE080CD4-E20C-40CA-8E9E-F439C6B5EB1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PePe.Service", "PePe.Service\PePe.Service.csproj", "{AE080CD4-E20C-40CA-8E9E-F439C6B5EB1D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PePe.UnitTests", "PePe.UnitTests\PePe.UnitTests.csproj", "{24F59E78-7897-41E6-98E5-407D96448854}"
 EndProject
