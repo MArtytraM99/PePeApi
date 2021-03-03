@@ -85,7 +85,8 @@ namespace PePe.API {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "PePe API");
             });
 
-            app.UseHttpsRedirection();
+            if(Configuration.GetValue<bool>("UseHttps"))
+                app.UseHttpsRedirection();
 
             app.UseRouting();
 
