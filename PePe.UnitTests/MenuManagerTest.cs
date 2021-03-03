@@ -123,5 +123,29 @@ namespace PePe.UnitTests {
             dao.Received().GetMenuByDate(todaysDate);
             dao.DidNotReceiveWithAnyArgs().Save(Arg.Any<Menu>());
         }
+
+        [Fact]
+        public void GetTodaysMenu_ScrapesEmpty_DoesntSave() {
+            var todaysDate = new DateTime(1970, 12, 24).Date;
+            var emptyMenu = new Menu {
+                Date = todaysDate,
+                Meals = new List<Meal> {}
+            };
+            var webScraper = GetStaticWebScraper(emptyMenu);
+            var dateProvider = GetStaticDateProvider(todaysDate);
+            var dao = Substitute.For<IMenuDao>();
+            dao.GetMenuByDate(Arg.Any<DateTime>()).Returns(emptyMenu);
+            dao.Save(Arg.Any<Menu>()).Returns(ci => (Menu)ci.Args()[0]);
+            var manager = new MenuManager(dao, dateProvider, webScraper, GetVoidLogger());
+
+            webScraper.ClearReceivedCalls();
+            dao.ClearReceivedCalls();
+            var todaysMenu = manager.GetTodaysMenu();
+
+            Assert.Equal(emptyMenu, todaysMenu);
+            webScraper.Received().ScrapeForMenu();
+            dao.Received().GetMenuByDate(todaysDate);
+            dao.DidNotReceiveWithAnyArgs().Save(Arg.Any<Menu>());
+        }
     }
 }

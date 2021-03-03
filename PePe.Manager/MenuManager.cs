@@ -29,7 +29,7 @@ namespace PePe.Manager {
             var todaysDate = dateProvider.GetDate();
             var savedMenu = menuDao.GetMenuByDate(todaysDate);
             
-            if (savedMenu != null && savedMenu.Meals.Any())
+            if (savedMenu != null && savedMenu.Meals != null && savedMenu.Meals.Any())
                 return savedMenu;
 
             logger.LogInformation("Menu is not saved. Scraping web site");
@@ -39,7 +39,8 @@ namespace PePe.Manager {
                 return new Menu { Date = todaysDate, Meals = new List<Meal>() };
             }
 
-            scrapedMenu = menuDao.Save(scrapedMenu);
+            if (scrapedMenu != null && scrapedMenu.Meals != null && scrapedMenu.Meals.Any())
+                scrapedMenu = menuDao.Save(scrapedMenu);
 
             return scrapedMenu;
         }
