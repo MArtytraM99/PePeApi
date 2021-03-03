@@ -23,7 +23,7 @@ If you want to run PePe API as a docker image the best way to do it is following
 
  2. Build docker image
 
-`docker build -t pepeapi-image -f Dockerfile .
+`docker build -t pepeapi-image -f Dockerfile .`
 
  3. Run image
 
