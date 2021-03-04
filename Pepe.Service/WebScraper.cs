@@ -121,10 +121,17 @@ namespace PePe.Service {
             }
 
             int month;
-            if (tokens[index].IsNumber())
+            if (tokens[index].IsNumber()) {
                 month = tokens[index].GetNumber();
-            else
-                month = monthConvertor.convertMonth(tokens[index].representation);
+            } else {
+                var monthRepresentation = tokens[index].representation;
+                try {
+                    month = monthConvertor.convertMonth(monthRepresentation);
+                } catch (KeyNotFoundException) {
+                    logger.LogError($"Month '{monthRepresentation}' could not be converted. Heading: '{headingDate}'. Returning 1.1.1970");
+                    return new DateTime(1970, 1, 1);
+                }
+            }
             index++;
 
             while (index < tokens.Count && tokens[index].IsWord())
