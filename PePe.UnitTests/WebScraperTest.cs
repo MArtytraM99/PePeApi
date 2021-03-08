@@ -26,6 +26,12 @@ namespace PePe.UnitTests {
             return new MonthConvertor();
         }
 
+        IDateProvider GetDateProvider(DateTime date) {
+            var provider = Substitute.For<IDateProvider>();
+            provider.GetDate().Returns(date.Date);
+            return provider;
+        }
+
         ILogger<WebScraper> GetVoidLogger() {
             return new VoidLogger<WebScraper>();
         }
@@ -34,25 +40,31 @@ namespace PePe.UnitTests {
         public void CallsHtmlDocumentProvider() {
             var htmlDocumentProvider = GetHtmlDocumentProvider(htmlFileName);
             var monthConvertor = GetMonthConvertor();
-            var scraper = new WebScraper(htmlDocumentProvider, monthConvertor, GetVoidLogger());
+            var dateProvider = GetDateProvider(new DateTime(1970, 1, 1));
+            var scraper = new WebScraper(htmlDocumentProvider, monthConvertor, dateProvider, GetVoidLogger());
 
             htmlDocumentProvider.ClearReceivedCalls();
+            dateProvider.ClearReceivedCalls();
             scraper.ScrapeForMenu();
 
             htmlDocumentProvider.ReceivedWithAnyArgs();
+            dateProvider.DidNotReceiveWithAnyArgs().GetDate();
         }
 
         [Fact]
         public void ParsesDateCorrectly() {
             var htmlDocumentProvider = GetHtmlDocumentProvider(htmlFileName);
             var monthConvertor = GetMonthConvertor();
-            var scraper = new WebScraper(htmlDocumentProvider, monthConvertor, GetVoidLogger());
+            var dateProvider = GetDateProvider(new DateTime(1970, 1, 1));
+            var scraper = new WebScraper(htmlDocumentProvider, monthConvertor, dateProvider, GetVoidLogger());
             var expectedDate = fileDate;
 
+            dateProvider.ClearReceivedCalls();
             var menu = scraper.ScrapeForMenu();
 
             Assert.NotNull(menu);
             Assert.Equal(expectedDate.Date, menu.Date.Date);
+            dateProvider.DidNotReceiveWithAnyArgs().GetDate();
         }
 
         public static IEnumerable<object[]> GetExpectedMeals() {
@@ -115,12 +127,15 @@ namespace PePe.UnitTests {
         public void ParsesMealsCorrectly(string htmlFileName, IEnumerable<Meal> expectedMeals) {
             var htmlDocumentProvider = GetHtmlDocumentProvider(htmlFileName);
             var monthConvertor = GetMonthConvertor();
-            var scraper = new WebScraper(htmlDocumentProvider, monthConvertor, GetVoidLogger());
+            var dateProvider = GetDateProvider(new DateTime(1970, 1, 1));
+            var scraper = new WebScraper(htmlDocumentProvider, monthConvertor, dateProvider, GetVoidLogger());
 
+            dateProvider.ClearReceivedCalls();
             var menu = scraper.ScrapeForMenu();
 
             Assert.NotNull(menu);
             Assert.Equal(expectedMeals, menu.Meals, new MealComparer());
+            dateProvider.DidNotReceiveWithAnyArgs().GetDate();
         }
 
         public static IEnumerable<object[]> GetDateParsingData() {
@@ -139,14 +154,39 @@ namespace PePe.UnitTests {
 
         [Theory]
         [MemberData(nameof(GetDateParsingData))]
-        public void ParseHeadingDate_ParsesDateCorrectly(string dateString, DateTime expectedDate) {
+        public void ParseHeadingDate_ParsesDateCorrectlyWithoutUsingDefaults(string dateString, DateTime expectedDate) {
             var htmlDocumentProvider = Substitute.For<ILoadedHtmlDocumentProvider>();
             var monthConvertor = GetMonthConvertor();
-            var scraper = new WebScraper(htmlDocumentProvider, monthConvertor, GetVoidLogger());
+            var defaultDateProvider = GetDateProvider(expectedDate);
+            var scraper = new WebScraper(htmlDocumentProvider, monthConvertor, defaultDateProvider, GetVoidLogger());
 
+            defaultDateProvider.ClearReceivedCalls();
             var parsedDate = scraper.ParseHeadingDate(dateString);
 
             Assert.Equal(expectedDate, parsedDate);
+            defaultDateProvider.DidNotReceiveWithAnyArgs().GetDate();
+        }
+
+        public static IEnumerable<object[]> GetDateParsingDataForDefaultsUse() {
+            yield return new object[] { "Pondělí 2.ledna", new DateTime(2021, 1, 1), new DateTime(2021, 1, 2) };
+            yield return new object[] { "Pondělí 2.LEDNA", new DateTime(1970, 1, 1), new DateTime(1970, 1, 2) };
+            yield return new object[] { "Pondělí 2.1", new DateTime(1970, 1, 1), new DateTime(1970, 1, 2) };
+            yield return new object[] { "Pondělí 2.březina 2021", new DateTime(1970, 3, 1), new DateTime(2021, 3, 2) };
+        }
+
+        [Theory]
+        [MemberData(nameof(GetDateParsingDataForDefaultsUse))]
+        public void ParseHeadingDate_ParsesDateCorrectlyWUsingDefaults(string dateString, DateTime defaultDate, DateTime expectedDate) {
+            var htmlDocumentProvider = Substitute.For<ILoadedHtmlDocumentProvider>();
+            var monthConvertor = GetMonthConvertor();
+            var defaultDateProvider = GetDateProvider(defaultDate);
+            var scraper = new WebScraper(htmlDocumentProvider, monthConvertor, defaultDateProvider, GetVoidLogger());
+
+            defaultDateProvider.ClearReceivedCalls();
+            var parsedDate = scraper.ParseHeadingDate(dateString);
+
+            Assert.Equal(expectedDate, parsedDate);
+            defaultDateProvider.Received().GetDate();
         }
     }
 }

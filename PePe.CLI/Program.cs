@@ -69,7 +69,7 @@ namespace PePe.CLI {
         static void SaveOldHtmlMenus(IMenuDao dao, string directoryName) {
             var files = Directory.GetFiles(directoryName);
             var htmlProvider = new StaticFileLoadedHtmlDocProvider();
-            var webScraper = new WebScraper(htmlProvider, new MonthConvertor(), new VoidLogger<WebScraper>());
+            var webScraper = new WebScraper(htmlProvider, new MonthConvertor(), new PragueDateProvider(), new VoidLogger<WebScraper>());
 
             foreach (var file in files) {
                 if (Path.GetExtension(file) != ".html")

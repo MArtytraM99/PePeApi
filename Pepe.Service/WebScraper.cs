@@ -15,15 +15,18 @@ namespace PePe.Service {
 
         private readonly ILoadedHtmlDocumentProvider htmlDocumentProvider;
         private readonly IMonthConvertor monthConvertor;
+        private readonly IDateProvider defaultDateProvider;
         private readonly ILogger<WebScraper> logger;
 
         public WebScraper(
             ILoadedHtmlDocumentProvider htmlDocumentProvider,
             IMonthConvertor monthConvertor,
+            IDateProvider defaultDateProvider,
             ILogger<WebScraper> logger
             ){
             this.htmlDocumentProvider = htmlDocumentProvider;
             this.monthConvertor = monthConvertor;
+            this.defaultDateProvider = defaultDateProvider;
             this.logger = logger;
         }
 
@@ -128,20 +131,25 @@ namespace PePe.Service {
                 try {
                     month = monthConvertor.convertMonth(monthRepresentation);
                 } catch (KeyNotFoundException) {
-                    logger.LogError($"Month '{monthRepresentation}' could not be converted. Heading: '{headingDate}'. Returning 1.1.1970");
-                    return new DateTime(1970, 1, 1);
+                    var defaultMonth = defaultDateProvider.GetDate().Month;
+                    logger.LogWarning($"Month '{monthRepresentation}' could not be converted. Heading: '{headingDate}'. Using default month: {defaultMonth}");
+                    month = defaultMonth;
                 }
             }
             index++;
 
             while (index < tokens.Count && tokens[index].IsWord())
                 index++;
+            int year;
             if (index == tokens.Count) {
-                var msg = $"Heading date '{headingDate}' doesn't contain year.";
-                logger.LogError(msg);
-                throw new ArgumentException(msg);
+                var defaultYear = defaultDateProvider.GetDate().Year;
+                var msg = $"Heading date '{headingDate}' doesn't contain year. Using default year: {defaultYear}";
+                logger.LogWarning(msg);
+                year = defaultYear;
+            } else {
+                year = tokens[index].GetNumber();
             }
-            int year = tokens[index].GetNumber();
+            
 
             return new DateTime(year, month, day);
         }
