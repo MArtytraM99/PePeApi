@@ -34,8 +34,27 @@ namespace PePe.DAO {
         }
 
         public Menu Save(Menu menu) {
-            collection.InsertOne(menu);
-            return menu;
+            var eqFilter = Filter.Eq(m => m.Date, menu.Date);
+
+            using (var session = client.StartSession()) {
+                
+                var savedInstance = collection.Find(eqFilter).SingleOrDefault();
+
+                if (savedInstance == null) {
+                    collection.InsertOne(menu);
+                }
+
+                // if new meals are added or just changed
+                if(savedInstance.Meals.Count() < menu.Meals.Count()) {
+                    collection.DeleteOne(eqFilter); // delete old one
+
+                    collection.InsertOne(menu); // save new one
+                }
+
+                session.CommitTransaction();
+            }
+            
+            return collection.Find(eqFilter).SingleOrDefault();
         }
 
         public IEnumerable<Menu> Find(MenuSearch menuSearch) {
