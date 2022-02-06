@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
@@ -14,14 +15,17 @@ namespace PePe.DAO {
         private readonly MongoClient client;
         private readonly IMongoDatabase database;
         private readonly IMongoCollection<Menu> collection;
+        private readonly ILogger<MongoMenuDao> logger;
 
         public FilterDefinitionBuilder<Menu> Filter { get; set; } = Builders<Menu>.Filter;
-        public MongoMenuDao(string connectionString, string databaseName, string collectionName) {
+        public UpdateDefinitionBuilder<Menu> Update { get; set; } = Builders<Menu>.Update;
+        public MongoMenuDao(string connectionString, string databaseName, string collectionName, ILogger<MongoMenuDao> logger) {
             client = new MongoClient(connectionString);
 
             database = client.GetDatabase(databaseName);
 
             collection = database.GetCollection<Menu>(collectionName);
+            this.logger = logger;
         }
 
         public Menu GetMenuByDate(DateTime dateTime) {
@@ -34,25 +38,17 @@ namespace PePe.DAO {
         }
 
         public Menu Save(Menu menu) {
-            var eqFilter = Filter.Eq(m => m.Date, menu.Date);
-
-            using (var session = client.StartSession()) {
-                
-                var savedInstance = collection.Find(eqFilter).SingleOrDefault();
-
-                if (savedInstance == null) {
-                    collection.InsertOne(menu);
-                }
-
-                // if new meals are added or just changed
-                if(savedInstance.Meals.Count() < menu.Meals.Count()) {
-                    collection.DeleteOne(eqFilter); // delete old one
-
-                    collection.InsertOne(menu); // save new one
-                }
-
-                session.CommitTransaction();
+            if (menu == null || menu.Meals == null || menu.Meals.Count() == 0) {
+                logger.LogInformation("Menu is null or empty => not saving and returning null");
+                return null;
             }
+
+            var eqFilter = Filter.Eq(m => m.Date, menu.Date);
+            var update = Update.Set(m => m.Date, menu.Date).Set(m => m.Meals, menu.Meals);
+            var options = new UpdateOptions { IsUpsert = true };
+
+            var result = collection.UpdateOne(eqFilter, update, options);
+            logger.LogInformation($"Mongo menu update result -- matched: {result.MatchedCount}, upsertedId: {result.UpsertedId}, modified: {result.ModifiedCount}");
             
             return collection.Find(eqFilter).SingleOrDefault();
         }

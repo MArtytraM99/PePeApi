@@ -42,7 +42,7 @@ namespace PePe.API {
             services.AddScoped<ILoadedHtmlDocumentProvider, WebLoadedHtmlDocumentProvider>();
             services.AddScoped<IBasicInfoProvider, StaticBasicInfoProvider>();
             services.AddAutoMapper(typeof(APIProfile));
-            
+
             services.AddScoped<IWebScraper, WebScraper>();
             services.AddScoped<IDateProvider, PragueDateProvider>();
             
@@ -51,7 +51,12 @@ namespace PePe.API {
             string collectionName = Configuration.GetConnectionString("pepeMenuCollectionName");
             new ClassMap().RegisterMaps();
             services.AddSingleton<IMenuDao, MongoMenuDao>(serviceProvider => {
-                return new MongoMenuDao(connectionString, databaseName, collectionName);
+                return new MongoMenuDao(
+                    connectionString,
+                    databaseName,
+                    collectionName,
+                    serviceProvider.GetRequiredService<ILogger<MongoMenuDao>>()
+                );
             });
 
             services.AddScoped<IMenuManager, MenuManager>();
