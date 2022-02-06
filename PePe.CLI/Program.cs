@@ -22,7 +22,7 @@ namespace PePe.CLI {
             string connectionString = "mongodb://127.0.0.1:27017/";
             string dbName = "pepedb";
             string collectionName = "menu";
-            MongoMenuDao dao = new MongoMenuDao(connectionString, dbName, collectionName);
+            MongoMenuDao dao = new MongoMenuDao(connectionString, dbName, collectionName, new VoidLogger<MongoMenuDao>());
 
             var manager = new MenuManager(dao, new PragueDateProvider(), host.Services.GetRequiredService<IWebScraper>(), host.Services.GetRequiredService<ILogger<MenuManager>>());
 
