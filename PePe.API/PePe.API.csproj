@@ -28,9 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Pepe.Base\PePe.Base.csproj" />
+    <ProjectReference Include="..\PePe.Base\PePe.Base.csproj" />
     <ProjectReference Include="..\PePe.Manager\PePe.Manager.csproj" />
-    <ProjectReference Include="..\Pepe.Service\PePe.Service.csproj" />
+    <ProjectReference Include="..\PePe.Service\PePe.Service.csproj" />
   </ItemGroup>
 
 
