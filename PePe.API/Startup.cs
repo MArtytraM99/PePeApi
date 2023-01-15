@@ -6,12 +6,14 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
@@ -21,6 +23,8 @@ using PePe.API.Model;
 using PePe.DAO;
 using PePe.Manager;
 using PePe.Service;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using System.Net.Http;
 
 namespace PePe.API {
     public class Startup {
@@ -61,6 +65,13 @@ namespace PePe.API {
 
             services.AddScoped<IMenuManager, MenuManager>();
 
+            services.AddHealthChecks()
+                .AddMongoDb(connectionString, name: "MongoDb connection")
+                .AddMongoDb(connectionString, databaseName, name: "MongoDB database")
+                .AddCheck("Single todays menu", new SingleMenuHealthCheck(connectionString, databaseName, collectionName, new PragueDateProvider()));
+
+            services.AddHealthChecksUI().AddInMemoryStorage();
+
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo {
                     Title = "PePe API",
@@ -98,6 +109,14 @@ namespace PePe.API {
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => {
+                endpoints.MapHealthChecks("/healthz", new HealthCheckOptions
+                {
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecksUI(options =>
+                {
+                    options.UIPath = "/healthcheck";
+                });
                 endpoints.MapControllers();
             });
         }
