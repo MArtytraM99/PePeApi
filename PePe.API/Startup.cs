@@ -109,13 +109,13 @@ namespace PePe.API {
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => {
-                endpoints.MapHealthChecks("/healthz", new HealthCheckOptions
+                endpoints.MapHealthChecks(Configuration.GetSection("HealthCheck").GetValue<string>("StatusUri"), new HealthCheckOptions
                 {
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
                 endpoints.MapHealthChecksUI(options =>
                 {
-                    options.UIPath = "/healthcheck";
+                    options.UIPath = Configuration.GetSection("HealthCheck").GetValue<string>("UIUri");
                 });
                 endpoints.MapControllers();
             });
