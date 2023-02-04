@@ -24,6 +24,12 @@ namespace PePe.API
             collection = database.GetCollection<Menu>(collectionName);
             this.dateProvider = dateProvider;
         }
+
+        private bool IsWeekend(DateTime date)
+        {
+            return date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
+        }
+
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
             var todaysDate = dateProvider.GetDate();
@@ -36,7 +42,14 @@ namespace PePe.API
                 return HealthCheckResult.Healthy("One menu was found for today");
             } else if (count == 0)
             {
-                return HealthCheckResult.Degraded("No menu was found for today");
+                if (IsWeekend(todaysDate))
+                {
+                    return HealthCheckResult.Healthy("No menu was found for today but it's weekend");
+                }
+                else
+                {
+                    return HealthCheckResult.Degraded("No menu was found for today");
+                }
             } else
             {
                 return HealthCheckResult.Unhealthy($"More than one menu was found today. Count: {count}");
