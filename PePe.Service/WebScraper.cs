@@ -12,6 +12,11 @@ using System.Text.RegularExpressions;
 namespace PePe.Service {
     public class WebScraper : IWebScraper {
         static readonly Regex spacesTrimmer = new Regex(@"\s\s+", RegexOptions.Compiled);
+        static readonly Dictionary<string, DayOfWeek> dayNames = new Dictionary<string, DayOfWeek> {
+            { "pondělí", DayOfWeek.Monday }, { "úterý", DayOfWeek.Tuesday }, { "středa", DayOfWeek.Wednesday },
+            { "čtvrtek", DayOfWeek.Thursday }, { "pátek", DayOfWeek.Friday },
+            { "sobota", DayOfWeek.Saturday }, { "neděle", DayOfWeek.Sunday }
+        };
 
         private readonly ILoadedHtmlDocumentProvider htmlDocumentProvider;
         private readonly IMonthConvertor monthConvertor;
@@ -50,6 +55,7 @@ namespace PePe.Service {
 
             return new Menu { 
                 Date = date,
+                HeadingDayOfWeek = ParseHeadingDayOfWeek(dateHeader.InnerText),
                 Meals = meals
             };
         }
@@ -91,6 +97,18 @@ namespace PePe.Service {
                 }
             }
             return meals;
+        }
+
+        /// <summary>
+        /// Parses name of the day (i.e. "ÚTERÝ") from the beginning of heading. Returns null if there is none or it is not recognized.
+        /// </summary>
+        public DayOfWeek? ParseHeadingDayOfWeek(string headingDate) {
+            var tokens = LoadTokensFromString(headingDate);
+            if (tokens.Count == 0 || !tokens[0].IsWord())
+                return null;
+
+            var name = tokens[0].representation.ToLowerInvariant();
+            return dayNames.TryGetValue(name, out var day) ? day : (DayOfWeek?)null;
         }
 
         /// <summary>

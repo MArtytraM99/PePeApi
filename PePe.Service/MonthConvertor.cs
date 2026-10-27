@@ -18,7 +18,7 @@ namespace PePe.Service {
                 { "srpna", 8 }, { "srpen", 8 },
                 { "září", 9 },
                 { "října", 10 }, { "říjen", 10 },
-                { "listopadu", 11 }, { "listopad", 12 },
+                { "listopadu", 11 }, { "listopad", 11 },
                 { "prosince", 12 }, { "prosinec", 12 }
             };
         }

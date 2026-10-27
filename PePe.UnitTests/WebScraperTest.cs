@@ -188,5 +188,47 @@ namespace PePe.UnitTests {
             Assert.Equal(expectedDate, parsedDate);
             defaultDateProvider.Received().GetDate();
         }
+
+        public static IEnumerable<object[]> GetDayOfWeekParsingData() {
+            yield return new object[] { "Pondělí 2.ledna 2021", DayOfWeek.Monday };
+            yield return new object[] { "ÚTERÝ        26.  ŘÍJNA    2026", DayOfWeek.Tuesday };
+            yield return new object[] { "STŘEDA 1.1.2021", DayOfWeek.Wednesday };
+            yield return new object[] { "čtvrtek 1.1.2021", DayOfWeek.Thursday };
+            yield return new object[] { "Pátek 1.1.2021", DayOfWeek.Friday };
+            yield return new object[] { "Sobota 1.1.2021", DayOfWeek.Saturday };
+            yield return new object[] { "NEDĚLE 1.1.2021", DayOfWeek.Sunday };
+            yield return new object[] { "Blabla 1.1.2021", null };
+            yield return new object[] { "2.1.2021", null };
+            yield return new object[] { "", null };
+        }
+
+        [Theory]
+        [MemberData(nameof(GetDayOfWeekParsingData))]
+        public void ParseHeadingDayOfWeek_ParsesDayName(string heading, DayOfWeek? expected) {
+            var scraper = new WebScraper(Substitute.For<ILoadedHtmlDocumentProvider>(), GetMonthConvertor(), GetDateProvider(new DateTime(1970, 1, 1)), GetVoidLogger());
+
+            Assert.Equal(expected, scraper.ParseHeadingDayOfWeek(heading));
+        }
+
+        [Fact]
+        public void ScrapeForMenu_HeadingWithMismatchedDateAndDayOfWeek_ReturnsBoth() {
+            // the page said "ÚTERÝ 26. ŘÍJNA 2026" on Tuesday 27th (the 26th was Monday)
+            var scraper = new WebScraper(GetHtmlDocumentProvider("res/pepe_26_10_2026_typo_in_date.html"), GetMonthConvertor(), GetDateProvider(new DateTime(1970, 1, 1)), GetVoidLogger());
+
+            var menu = scraper.ScrapeForMenu();
+
+            Assert.Equal(new DateTime(2026, 10, 26), menu.Date.Date);
+            Assert.Equal(DayOfWeek.Tuesday, menu.HeadingDayOfWeek);
+            Assert.Equal(11, System.Linq.Enumerable.Count(menu.Meals));
+        }
+
+        [Theory]
+        [InlineData("listopad", 11)]
+        [InlineData("listopadu", 11)]
+        [InlineData("prosinec", 12)]
+        [InlineData("prosince", 12)]
+        public void MonthConvertor_ConvertsNovemberAndDecember(string name, int expected) {
+            Assert.Equal(expected, GetMonthConvertor().convertMonth(name));
+        }
     }
 }

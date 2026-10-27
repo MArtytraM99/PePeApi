@@ -33,5 +33,8 @@
     <Content Include="res/pepe_21_01_2021.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="res/pepe_26_10_2026_typo_in_date.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

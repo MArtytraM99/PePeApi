@@ -147,5 +147,82 @@ namespace PePe.UnitTests {
             dao.Received().GetMenuByDate(todaysDate);
             dao.DidNotReceiveWithAnyArgs().Save(Arg.Any<Menu>());
         }
+
+        private Menu GetMenuWithMeal(DateTime date, DayOfWeek? headingDayOfWeek) {
+            return new Menu {
+                Date = date,
+                HeadingDayOfWeek = headingDayOfWeek,
+                Meals = new List<Meal> { new Meal { MealType = MealType.Main, Name = "MainName", Price = 25 } }
+            };
+        }
+
+        private (MenuManager manager, IMenuDao dao) GetManagerScraping(Menu scraped, DateTime todaysDate) {
+            var dao = Substitute.For<IMenuDao>();
+            dao.GetMenuByDate(Arg.Any<DateTime>()).Returns(ci => null);
+            dao.Save(Arg.Any<Menu>()).Returns(ci => (Menu)ci.Args()[0]);
+            var manager = new MenuManager(dao, GetStaticDateProvider(todaysDate), GetStaticWebScraper(scraped), GetVoidLogger());
+            return (manager, dao);
+        }
+
+        // 2026-10-27 is Tuesday
+        static readonly DateTime tuesday = new DateTime(2026, 10, 27);
+
+        [Fact]
+        public void GetTodaysMenu_DateMatchesButDayOfWeekDoesnt_SavesScrapedMenu() {
+            var scraped = GetMenuWithMeal(tuesday, DayOfWeek.Monday);
+            var (manager, dao) = GetManagerScraping(scraped, tuesday);
+
+            var todaysMenu = manager.GetTodaysMenu();
+
+            Assert.Equal(tuesday, todaysMenu.Date);
+            Assert.NotEmpty(todaysMenu.Meals);
+            dao.Received().Save(scraped);
+        }
+
+        [Fact]
+        public void GetTodaysMenu_DayOfWeekMatchesButDateDoesnt_UsesTodaysDateAndSaves() {
+            var scraped = GetMenuWithMeal(tuesday.AddDays(-1), DayOfWeek.Tuesday);
+            var (manager, dao) = GetManagerScraping(scraped, tuesday);
+
+            var todaysMenu = manager.GetTodaysMenu();
+
+            Assert.Equal(tuesday, todaysMenu.Date);
+            Assert.NotEmpty(todaysMenu.Meals);
+            dao.Received().Save(Arg.Is<Menu>(m => m.Date == tuesday));
+        }
+
+        [Fact]
+        public void GetTodaysMenu_NeitherDateNorDayOfWeekMatch_ReturnsEmptyAndDoesntSave() {
+            var scraped = GetMenuWithMeal(tuesday.AddDays(-1), DayOfWeek.Monday);
+            var (manager, dao) = GetManagerScraping(scraped, tuesday);
+
+            var todaysMenu = manager.GetTodaysMenu();
+
+            Assert.Equal(tuesday, todaysMenu.Date);
+            Assert.Empty(todaysMenu.Meals);
+            dao.DidNotReceiveWithAnyArgs().Save(Arg.Any<Menu>());
+        }
+
+        [Fact]
+        public void GetTodaysMenu_DayOfWeekMatchesButDateIsWeekOld_ReturnsEmptyAndDoesntSave() {
+            var scraped = GetMenuWithMeal(tuesday.AddDays(-7), DayOfWeek.Tuesday);
+            var (manager, dao) = GetManagerScraping(scraped, tuesday);
+
+            var todaysMenu = manager.GetTodaysMenu();
+
+            Assert.Empty(todaysMenu.Meals);
+            dao.DidNotReceiveWithAnyArgs().Save(Arg.Any<Menu>());
+        }
+
+        [Fact]
+        public void GetTodaysMenu_UnknownDayOfWeekAndDateDoesntMatch_ReturnsEmptyAndDoesntSave() {
+            var scraped = GetMenuWithMeal(tuesday.AddDays(-1), null);
+            var (manager, dao) = GetManagerScraping(scraped, tuesday);
+
+            var todaysMenu = manager.GetTodaysMenu();
+
+            Assert.Empty(todaysMenu.Meals);
+            dao.DidNotReceiveWithAnyArgs().Save(Arg.Any<Menu>());
+        }
     }
 }
